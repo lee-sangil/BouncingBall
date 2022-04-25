@@ -17,7 +17,7 @@ class App{
         this.resize();
 
         this.ball = new Ball(this.stageWidth, this.stageHeight, this.stageHeight*0.04, this.stageHeight*0.006); // width, height, radius, initial speed
-        this.obstacles = new Obstacles(this.stageWidth, this.stageHeight, 10, this.ball); // width, height, the maximum number of obstacles, exclusion region(=ball)
+        this.obstacles = new Obstacles(this.stageWidth, this.stageHeight, 8, this.ball); // width, height, the maximum number of obstacles, exclusion region(=ball)
         this.obstacles.updateView(this.stageWidth, this.stageHeight, 0, 0);
 
         window.requestAnimationFrame(this.animate.bind(this));

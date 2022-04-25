@@ -1,12 +1,42 @@
+function HSVtoRGB(h, s, v) {
+    var r, g, b, i, f, p, q, t;
+    if (arguments.length === 1) {
+        s = h.s, v = h.v, h = h.h;
+    }
+    i = Math.floor(h * 6);
+    f = h * 6 - i;
+    p = v * (1 - s);
+    q = v * (1 - f * s);
+    t = v * (1 - (1 - f) * s);
+    switch (i % 6) {
+        case 0: r = v, g = t, b = p; break;
+        case 1: r = q, g = v, b = p; break;
+        case 2: r = p, g = v, b = t; break;
+        case 3: r = p, g = q, b = v; break;
+        case 4: r = t, g = p, b = v; break;
+        case 5: r = v, g = p, b = q; break;
+    }
+    return {
+        r: Math.round(r * 255),
+        g: Math.round(g * 255),
+        b: Math.round(b * 255)
+    };
+}
+
 export class Obstacle{
     constructor(x, y, x_max, y_max) {
         this.top_x = x;
         this.top_y = y;
         this.top_x_max = x_max;
         this.top_y_max = y_max;
-        this.color_red = 253;
-        this.color_green = 23;
-        this.color_blue = 32;
+
+        const rgb = HSVtoRGB(Obstacle.count++ / 8., 0.8, 1.0);
+        this.color_red = rgb.r;
+        this.color_green = rgb.g;
+        this.color_blue = rgb.b;
+
+        this.audio = new Audio('./assets/' + Obstacle.count + '.wav');
+        this.audio.preload = 'auto';
 
         this.shadow_ratio = 0.9;
         this.eff_ratio = 1;
@@ -106,9 +136,9 @@ export class Obstacle{
         this.top_x_max = this.top_x_max + dx;
         this.top_y_max = this.top_y_max + dy;
     }
-    changeColor(){
-        this.color_red = Math.floor(Math.random()*256);
-        this.color_green = Math.floor(Math.random()*256);
-        this.color_blue = Math.floor(Math.random()*256);
+    playSound(){
+        this.audio.currentTime = 0;
+        this.audio.play();
     }
 }
+Obstacle.count = 0;

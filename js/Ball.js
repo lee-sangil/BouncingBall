@@ -17,7 +17,7 @@ export class Ball{
         for (let i = 0; i < obstacles.num_obstacle; ++i)
             this.bounceObstacle(obstacles.nth_child[i]);
 
-        ctx.fillStyle = "#fdd700";
+        ctx.fillStyle = "#dddddd";
         ctx.beginPath();
         ctx.arc(this.x, this.y, this.radius, 0, 2 * Math.PI);
         ctx.fill();
@@ -46,12 +46,12 @@ export class Ball{
             this.vy = Math.sign(this.y - obstacle.eff_y) * Math.abs(this.vy);
             this.y += this.vy;
             // window.navigator.vibrate(5); // iOS does not support this function.
-            obstacle.changeColor();
+            obstacle.playSound();
         }else if ((this.x > minX && this.x < maxX) && (this.y > obstacle.eff_y && this.y < obstacle.eff_y_max) ){ // collide with vertical edge
             this.vx = Math.sign(this.x - obstacle.eff_x) * Math.abs(this.vx);
             this.x += this.vx;
             // window.navigator.vibrate(5); // iOS does not support this function.
-            obstacle.changeColor();
+            obstacle.playSound();
         }else{ 
             if (Math.pow(this.x - obstacle.eff_x,2) + Math.pow(this.y - obstacle.eff_y,2) < Math.pow(this.radius,2)){ // collide with top-left corner
                 let v_reflect_norm2 = Math.pow(this.x - obstacle.eff_x,2) + Math.pow(this.y - obstacle.eff_y,2);
@@ -61,7 +61,7 @@ export class Ball{
                 this.x += this.vx;
                 this.y += this.vy;
                 // window.navigator.vibrate(5); // iOS does not support this function.
-                obstacle.changeColor();
+                obstacle.playSound();
             }
             if (Math.pow(this.x - obstacle.eff_x_max,2) + Math.pow(this.y - obstacle.eff_y,2) < Math.pow(this.radius,2)){ // collide with top-right corner
                 let v_reflect_norm2 = Math.pow(this.x - obstacle.eff_x_max,2) + Math.pow(this.y - obstacle.eff_y,2);
@@ -71,7 +71,7 @@ export class Ball{
                 this.x += this.vx;
                 this.y += this.vy;
                 // window.navigator.vibrate(5); // iOS does not support this function.
-                obstacle.changeColor();
+                obstacle.playSound();
             }
             if (Math.pow(this.x - obstacle.eff_x,2) + Math.pow(this.y - obstacle.eff_y_max,2) < Math.pow(this.radius,2)){ // collide with bottom-left corner
                 let v_reflect_norm2 = Math.pow(this.x - obstacle.eff_x,2) + Math.pow(this.y - obstacle.eff_y_max,2);
@@ -81,7 +81,7 @@ export class Ball{
                 this.x += this.vx;
                 this.y += this.vy;
                 // window.navigator.vibrate(5); // iOS does not support this function.
-                obstacle.changeColor();
+                obstacle.playSound();
             }
             if (Math.pow(this.x - obstacle.eff_x_max,2) + Math.pow(this.y - obstacle.eff_y_max,2) < Math.pow(this.radius,2)){ // collide with bottom-right corner
                 let v_reflect_norm2 = Math.pow(this.x - obstacle.eff_x_max,2) + Math.pow(this.y - obstacle.eff_y_max,2);
@@ -91,7 +91,7 @@ export class Ball{
                 this.x += this.vx;
                 this.y += this.vy;
                 // window.navigator.vibrate(5); // iOS does not support this function.
-                obstacle.changeColor();
+                obstacle.playSound();
             }
         }
     }
