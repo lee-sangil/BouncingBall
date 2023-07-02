@@ -1,27 +1,49 @@
 import { Ball } from "./Ball.js"
 import { Obstacles } from "./Obstacles.js"
 
-class App{
-    constructor(){
+export class App{
+    constructor(app_container, base_dir){
         this.canvas = document.createElement("canvas");
+        this.canvas.style.width = '100%'
+        this.canvas.style.height = '100%'
         this.ctx = this.canvas.getContext("2d");
 
-        document.body.appendChild(this.canvas);
+        app_container.appendChild(this.canvas);
+        this.body = this.canvas;
 
-        window.addEventListener("touchstart", this.touchstart.bind(this), false);
-        window.addEventListener("touchmove", this.touchmove.bind(this), false);
-        window.addEventListener("mousedown", this.mousedown.bind(this), false);
-        window.addEventListener("mouseup", this.mouseup.bind(this), false);
+        this.body.addEventListener("touchstart", this.touchstart.bind(this), false);
+        this.body.addEventListener("touchmove", this.touchmove.bind(this), false);
+        this.body.addEventListener("mousedown", this.mousedown.bind(this), false);
+        this.body.addEventListener("mouseup", this.mouseup.bind(this), false);
         window.addEventListener("resize", this.resize.bind(this), false);
 
         this.resize();
 
         this.ball = new Ball(this.stageWidth, this.stageHeight, this.stageHeight*0.04, this.stageHeight*0.006); // width, height, radius, initial speed
-        this.obstacles = new Obstacles(this.stageWidth, this.stageHeight, 8, this.ball); // width, height, the maximum number of obstacles, exclusion region(=ball)
+        this.obstacles = new Obstacles(this.stageWidth, this.stageHeight, 8, this.ball, base_dir); // width, height, the maximum number of obstacles, exclusion region(=ball)
         this.obstacles.updateView(this.stageWidth, this.stageHeight, 0, 0);
 
-        window.requestAnimationFrame(this.animate.bind(this));
+        this.animate();
     }
+
+    release(){
+        window.cancelAnimationFrame(this.requestID);
+        window.removeEventListener('resize', this.resize.bind(this));
+
+        this.removeElement(this.body);
+    }
+
+    removeElement(element){
+        while (element.firstChild) {
+            this.removeElement(element.firstChild);
+        }
+        element.remove();
+    }
+
+    getTotalNumAssets() {
+        return this.obstacles.num_obstacle;
+    }
+
     touchstart(evt){
         this.touch_x = evt.touches[0].pageX;
         this.touch_y = evt.touches[0].pageY;
@@ -83,26 +105,6 @@ class App{
         this.obstacles.drawShadow(this.ctx);
         this.ball.draw(this.ctx, this.stageWidth, this.stageHeight, this.obstacles);
         this.obstacles.drawForeground(this.ctx);
-        window.requestAnimationFrame(this.animate.bind(this));
+        this.requestID = window.requestAnimationFrame(this.animate.bind(this));
     }
-}
-
-window.onload = () => {
-    $(window.document).on("contextmenu", function(event){ return false; }); // lock right click
-    
-    if (getComputedStyle(document.documentElement).getPropertyValue('--debug-mode') != 1){
-        $(window.document).on("keydown", function(event){
-            if(event.keyCode==123){ // Prevent from <F12> key
-                return false;
-            }
-            else if(event.ctrlKey && event.shiftKey && event.keyCode==73){
-                return false;  // Prevent from ctrl+shift+i
-            }
-            else if(event.ctrlKey){
-                return false;  // Prevent from ctrl
-            }
-        });
-    }
-    
-    new App();
 }

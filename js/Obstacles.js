@@ -1,7 +1,7 @@
 import { Obstacle } from "./Obstacle.js"
 
 export class Obstacles{
-    constructor(stageWidth, stageHeight, max_num_obstacle, ball) {
+    constructor(stageWidth, stageHeight, max_num_obstacle, ball, base_dir) {
         this.num_obstacle = max_num_obstacle;
         
         this.nth_child = [];
@@ -22,7 +22,7 @@ export class Obstacles{
                         break;
                     }
                 }
-                if (!overlay_w_others) this.nth_child.push(new Obstacle(x, y, x_max, y_max));
+                if (!overlay_w_others) this.nth_child.push(new Obstacle(x, y, x_max, y_max, base_dir));
             }
         }
         this.num_obstacle = this.nth_child.length;

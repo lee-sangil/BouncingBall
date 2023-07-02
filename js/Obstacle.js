@@ -24,7 +24,7 @@ function HSVtoRGB(h, s, v) {
 }
 
 export class Obstacle{
-    constructor(x, y, x_max, y_max) {
+    constructor(x, y, x_max, y_max, base_dir) {
         this.top_x = x;
         this.top_y = y;
         this.top_x_max = x_max;
@@ -35,7 +35,10 @@ export class Obstacle{
         this.color_green = rgb.g;
         this.color_blue = rgb.b;
 
-        this.audio = new Audio('./assets/' + Obstacle.count + '.wav');
+        this.audio = new Audio(base_dir + '/assets/' + (Obstacle.count % 8) + '.wav')
+        this.audio.onloadeddata = ()=>{
+            dispatchEvent(new CustomEvent("onloadasset", {detail: {type: 'none'}}));
+        };
         this.audio.preload = 'auto';
 
         this.shadow_ratio = 0.9;
