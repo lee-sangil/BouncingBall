@@ -1,8 +1,10 @@
+const base_dir = '/apps/bounce'
+
 import { Ball } from "./Ball.js"
 import { Obstacles } from "./Obstacles.js"
 
 export class App{
-    constructor(app_container, base_dir){
+    constructor(app_container){
         this.canvas = document.createElement("canvas");
         this.canvas.style.width = '100%'
         this.canvas.style.height = '100%'
@@ -15,8 +17,9 @@ export class App{
         this.body.addEventListener("touchmove", this.touchmove.bind(this), false);
         this.body.addEventListener("mousedown", this.mousedown.bind(this), false);
         this.body.addEventListener("mouseup", this.mouseup.bind(this), false);
-        window.addEventListener("resize", this.resize.bind(this), false);
 
+        this.resize = this.resize.bind(this);
+        window.addEventListener("resize", this.resize, false);
         this.resize();
 
         this.ball = new Ball(this.stageWidth, this.stageHeight, this.stageHeight*0.04, this.stageHeight*0.006); // width, height, radius, initial speed
@@ -28,7 +31,7 @@ export class App{
 
     release(){
         window.cancelAnimationFrame(this.requestID);
-        window.removeEventListener('resize', this.resize.bind(this));
+        window.removeEventListener('resize', this.resize, false);
 
         this.removeElement(this.body);
     }
