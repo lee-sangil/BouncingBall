@@ -5,13 +5,10 @@ import { Obstacles } from "./Obstacles.js"
 
 export class App{
     constructor(app_container){
-        this.canvas = document.createElement("canvas");
-        this.canvas.style.width = '100%'
-        this.canvas.style.height = '100%'
-        this.ctx = this.canvas.getContext("2d");
+        this.launch(app_container);
 
-        app_container.appendChild(this.canvas);
-        this.body = this.canvas;
+        this.canvas = document.getElementById("canvas");
+        this.ctx = this.canvas.getContext("2d");
 
         this.body.addEventListener("touchstart", this.touchstart.bind(this), false);
         this.body.addEventListener("touchmove", this.touchmove.bind(this), false);
@@ -29,11 +26,32 @@ export class App{
         this.animate();
     }
 
+    launch(app_container){
+        const xhr = new XMLHttpRequest();
+
+        xhr.open('GET', `${base_dir}/static/index.html`, false);
+        xhr.send(null);
+
+        this.body = document.createElement('div');
+        this.body.style.width = '100%';
+        this.body.style.height = '100%';
+        this.body.innerHTML = xhr.responseText;
+        app_container.appendChild(this.body);
+
+        xhr.open('GET', `${base_dir}/static/style.css`, false);
+        xhr.send(null);
+
+        this.style = document.createElement('style');
+        this.style.innerHTML = xhr.responseText;
+        document.head.appendChild(this.style);
+    }
+
     release(){
         window.cancelAnimationFrame(this.requestID);
         window.removeEventListener('resize', this.resize, false);
 
         this.removeElement(this.body);
+        document.head.removeChild(this.style);
     }
 
     removeElement(element){
