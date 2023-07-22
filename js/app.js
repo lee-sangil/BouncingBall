@@ -1,11 +1,13 @@
 const base_dir = '/apps/bounce'
 
+import { AppTemplate } from "/apps/addon/template/app_template.js";
 import { Ball } from "./Ball.js"
 import { Obstacles } from "./Obstacles.js"
 
-export class App{
+export class App extends AppTemplate {
     constructor(app_container){
-        this.launch(app_container);
+        super();
+        this.launch(app_container, `${base_dir}/static/index.html`, `${base_dir}/static/style.css`);
 
         this.canvas = document.getElementById("canvas");
         this.ctx = this.canvas.getContext("2d");
@@ -19,46 +21,14 @@ export class App{
         window.addEventListener("resize", this.resize, false);
         this.resize();
 
+        this.window_event_listener = [];
+        this.window_event_listener.push({'key': 'resize', 'callback': this.resize});
+
         this.ball = new Ball(this.stageWidth, this.stageHeight, this.stageHeight*0.04, this.stageHeight*0.006); // width, height, radius, initial speed
         this.obstacles = new Obstacles(this.stageWidth, this.stageHeight, 8, this.ball, base_dir); // width, height, the maximum number of obstacles, exclusion region(=ball)
         this.obstacles.updateView(this.stageWidth, this.stageHeight, 0, 0);
 
         this.animate();
-    }
-
-    launch(app_container){
-        const xhr = new XMLHttpRequest();
-
-        xhr.open('GET', `${base_dir}/static/index.html`, false);
-        xhr.send(null);
-
-        this.body = document.createElement('div');
-        this.body.style.width = '100%';
-        this.body.style.height = '100%';
-        this.body.innerHTML = xhr.responseText;
-        app_container.appendChild(this.body);
-
-        xhr.open('GET', `${base_dir}/static/style.css`, false);
-        xhr.send(null);
-
-        this.style = document.createElement('style');
-        this.style.innerHTML = xhr.responseText;
-        document.head.appendChild(this.style);
-    }
-
-    release(){
-        window.cancelAnimationFrame(this.requestID);
-        window.removeEventListener('resize', this.resize, false);
-
-        this.removeElement(this.body);
-        document.head.removeChild(this.style);
-    }
-
-    removeElement(element){
-        while (element.firstChild) {
-            this.removeElement(element.firstChild);
-        }
-        element.remove();
     }
 
     getTotalNumAssets() {
